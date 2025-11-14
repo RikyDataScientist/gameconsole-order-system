@@ -1,0 +1,26 @@
+[
+    {
+        "room_id": 1,
+        "name": "Room A",
+        "status": "available",
+        "booked_times": []
+    },
+    {
+        "room_id": 2,
+        "name": "Room B",
+        "status": "available",
+        "booked_times": []
+    },
+    {
+        "room_id": 3,
+        "name": "Room C",
+        "status": "available",
+        "booked_times": []
+    },
+    {
+        "room_id": 4,
+        "name": "Room D",
+        "status": "available",
+        "booked_times": []
+    }
+]
