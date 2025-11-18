@@ -1,4 +1,4 @@
-from json_helpers import load_data, save_data
+from utils.json_helpers import load_data, save_data
 from models.user_model import User
 
 class Auth:
@@ -53,11 +53,7 @@ class Auth:
         all_data.append(new_data_user.get_data())
         data.save(all_data)
 
-        return {
-            'Pesan': 'Registrasi Berjalan dengan Sempurna',
-            'User Id': new_data_user.user_id
-        }
-
+        return 'Registrasi Berhasil'
     # Log in Function
     def login(data, username, password):
         data.validate_username(username)
@@ -67,7 +63,4 @@ class Auth:
         if not data_user:
             raise ValueError('Username atau Password salah')
 
-        return {
-            'Pesan': 'Login Berhasil',
-            'User Id': data_user
-        }
+        return 'Login Berhasil'
