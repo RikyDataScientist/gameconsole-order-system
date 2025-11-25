@@ -1,7 +1,7 @@
 from utils.json_helpers import load_data, save_data
 from models.user_model import User
 
-class Auth:
+class UserController:
     path = 'database/users.json'
 
     # Username and Password Validation
@@ -41,6 +41,7 @@ class Auth:
         return None
 
     # Register or Sign Up Function
+    @classmethod
     def register(data, username, password):
         data.validate_username(username)
         data.validate_password(password)
@@ -54,7 +55,9 @@ class Auth:
         data.save(all_data)
 
         return 'Registrasi Berhasil'
+
     # Log in Function
+    @classmethod
     def login(data, username, password):
         data.validate_username(username)
         data.validate_password(password)
