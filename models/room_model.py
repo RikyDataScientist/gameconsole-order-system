@@ -18,9 +18,7 @@ class Room:
     def __init__(self, room_id, name_room):
         self.room_id = room_id
         self.name_room = name_room
-        self.time_each_rooms = (
-            Room.times_available.copy()
-        )  # Copy time availability for each rooms.
+        self.time_each_rooms = Room.times_available.copy()  # Copy time availability for each rooms.
         self.booked_times = []
 
     def check_availability(self, selected_time):
