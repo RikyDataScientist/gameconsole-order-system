@@ -114,7 +114,6 @@ class Register(QWidget):
 
         frameLayout.addWidget(title)
         frameLayout.addSpacing(30)
-        frameLayout.addWidget(self.chn)
         frameLayout.addWidget(self.username)
         frameLayout.addWidget(self.password)
         frameLayout.addWidget(link)
