@@ -14,7 +14,7 @@ class User:
     # To get instance property in dictionary form
     def get_data(self):
         return {
-            'user_id': self.user_id,
-            'username': self.username,
-            'password': self.password
+            "user_id": self.user_id,
+            "username": self.username,
+            "password": self.password
         }
