@@ -2,7 +2,7 @@ from datetime import datetime
 class Payment:
     sequence = 0
 
-    def __init__(self, booking_id, username, room_id, console, amount, status):
+    def __init__(self, booking_id, username, room_id, console, price, status):
         Payment.sequence += 1
         self.payment_id = str(Payment.sequence)
 
@@ -10,7 +10,7 @@ class Payment:
         self.username = username
         self.room_id = room_id
         self.console = console
-        self.amount = amount
+        self.price = price
         self.time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         self.status = status
 
@@ -21,7 +21,7 @@ class Payment:
             "username": self.username,
             "room_id": self.room_id,
             "console": self.console,
-            "amount": self.amount,
+            "price": self.price,
             "time": self.time,
             "status": self.status
         }
