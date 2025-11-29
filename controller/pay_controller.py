@@ -7,10 +7,11 @@ class PayController:
     def __init__(self, booking):
         self.booking = booking
         self.price = booking.price
+        self.payment = None
 
     def pay(self, amount):
-        if not amount:
-            raise ValueError("Input Bayar tidak boleh Kosong")
+        if amount <= 0:
+            raise ValueError("Input Bayar harus lebih dari nol")
         if amount < self.price:
             raise ValueError("Jumlah Bayar kurang dari Harga Bayar")
 

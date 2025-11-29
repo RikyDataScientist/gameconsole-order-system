@@ -156,6 +156,7 @@ def apply_style():
             font-size: 28px;
             font-weight: bold;
             color: #58a6ff;
+            background: transparent;
             margin-bottom: 5px;
             border-radius: 18px;
             padding: 12px;
