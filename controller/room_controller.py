@@ -16,16 +16,20 @@ class RoomManager:
             if self.model.room_id == value["room_id"]:
                 self.booked_times = value["booked_times"]
                 self.time_in_room = [i for i in self.model.time_each_rooms if i not in self.booked_times]
+
+                self.model.time_each_rooms = self.time_in_room
+                self.model.booked_times = self.booked_times
+
                 return value
         return None
 
     def check_room_general(self):
-        if self.time_in_room > 0:
-            return True
-        else:
-            return False
+        return len(self.time_in_room) > 0
 
     def check_room_by_hour(self, selected_time):
+        if not isinstance(selected_time, list):
+            selected_time = [selected_time]
+
         return all(t in self.time_in_room for t in selected_time)
 
     def order(self, selected_time):
@@ -33,6 +37,9 @@ class RoomManager:
             if value in self.time_in_room:
                 self.booked_times.append(value)
                 self.time_in_room.remove(value)
+
+        self.model.time_each_rooms = self.time_in_room
+        self.model.booked_times = self.booked_times
 
         data = load_data(RoomManager.path)
         for a in data:
