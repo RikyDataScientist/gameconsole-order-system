@@ -22,6 +22,7 @@ class PayController:
             booking_id=self.booking.booking_id,
             username=self.booking.username,
             room_id=self.booking.room_id,
+            times_book=self.booking.times,
             console=self.booking.console,
             price=self.price,
             status=self.booking.status

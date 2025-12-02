@@ -53,7 +53,7 @@ class PaymentGui(QWidget):
         rightbar = QFrame()
         right_layout = QVBoxLayout(rightbar)
         right_layout.setSpacing(20)
-        right_layout.setContentsMargins(40, 30, 40, 30)
+        right_layout.setContentsMargins(40, 20, 40, 20)
 
         title = QLabel("Payment")
         title.setObjectName("title")
@@ -82,11 +82,19 @@ class PaymentGui(QWidget):
 
         text2 = QLabel("Console")
         text2.setObjectName("text")
+        time_booked = QLabel(str(self.controller.booking.times))
+        time_booked.setObjectName("text")
+
+        layout.addWidget(text2, 2, 0)
+        layout.addWidget(time_booked, 2, 1, alignment=Qt.AlignmentFlag.AlignRight)
+
+        text3 = QLabel("Console")
+        text3.setObjectName("text")
         console = QLabel(str(self.controller.booking.console))
         console.setObjectName("text")
 
-        layout.addWidget(text2, 2, 0)
-        layout.addWidget(console, 2, 1, alignment=Qt.AlignmentFlag.AlignRight)
+        layout.addWidget(text3, 3, 0)
+        layout.addWidget(console, 3, 1, alignment=Qt.AlignmentFlag.AlignRight)
 
         self.input = QLineEdit()
         self.input.setObjectName("inputtext")
@@ -165,6 +173,7 @@ class PaymentGui(QWidget):
         #text {
             font-size: 13px;
             background: transparent;
+            color: white;
         }
 
         #inputtext {
