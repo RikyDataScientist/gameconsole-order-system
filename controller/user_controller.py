@@ -66,4 +66,4 @@ class UserController:
         if not data_user:
             raise ValueError('Username atau Password salah')
 
-        return 'Login Berhasil'
+        return "Login Berhasil", User.from_dict(data_user)

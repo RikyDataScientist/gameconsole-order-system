@@ -1,6 +1,7 @@
 from PyQt6.QtWidgets import QWidget, QFrame, QVBoxLayout, QPushButton, QLineEdit, QLabel
 from PyQt6.QtCore import Qt
 from utils.info_helper import show_info, show_error
+from gui.main_menu import Main_Menu
 
 class Login(QWidget):
     def __init__(self, stack, controller):
@@ -60,13 +61,12 @@ class Login(QWidget):
         password = self.password.text().strip()
 
         try:
-            message = self.controller.login(username, password)
-            show_info(str(message))
+            msg, data = self.controller.login(username, password)
+            show_info(str(msg))
 
-            # main_page = MainController(data)
-            # dashboard = Dashboard(main_page)
-            # self.stack.addWidget(dashboard)
-            # self.stack.setCurrentIndex(2)
+            main_menu = Main_Menu(data)
+            self.stack.addWidget(main_menu)
+            self.stack.setCurrentIndex(2)
 
         except Exception as msg:
             show_error(str(msg))
@@ -139,12 +139,6 @@ class Register(QWidget):
 
 def apply_style():
     return """
-        QWidget {
-            background-color: #0d1117;
-            color: #c9d1d9;
-            font-family: 'Segoe UI';
-        }
-
         #card {
             background-color: #161b22;
             border: 1px solid #1f2937;

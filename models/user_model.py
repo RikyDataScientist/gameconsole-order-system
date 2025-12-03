@@ -18,3 +18,9 @@ class User:
             "username": self.username,
             "password": self.password
         }
+
+    @classmethod
+    def from_dict(cls, data):
+        obj = cls(data["username"], data["password"])
+        obj.user_id = data["user_id"]
+        return obj
