@@ -68,6 +68,8 @@ class Login(QWidget):
             self.stack.addWidget(main_menu)
             self.stack.setCurrentIndex(2)
 
+            self.stack.setFixedSize(main_menu.size())
+
         except Exception as msg:
             show_error(str(msg))
 
@@ -133,6 +135,8 @@ class Register(QWidget):
             message = self.controller.register(username, password)
             show_info(str(message))
             self.stack.setCurrentIndex(0)
+            self.username.clear()
+            self.password.clear()
 
         except Exception as msg:
             show_error(str(msg))

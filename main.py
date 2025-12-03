@@ -5,6 +5,14 @@ from controller.user_controller import UserController
 if __name__ == "__main__":
     app = QApplication([])
 
+    app.setStyleSheet("""
+        QWidget {
+            background-color: #0d1117;
+            color: #c9d1d9;
+            font-family: 'Segoe UI';
+        }
+""")
+
     stack = QStackedWidget()
     controller = UserController()
 
@@ -17,9 +25,4 @@ if __name__ == "__main__":
     stack.setCurrentIndex(0)
 
     stack.show()
-    frame = stack.frameGeometry()
-    center = stack.screen().availableGeometry().center()
-    frame.moveCenter(center)
-    stack.move(frame.topLeft())
-
     app.exec()

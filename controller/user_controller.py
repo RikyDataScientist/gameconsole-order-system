@@ -20,7 +20,9 @@ class UserController:
     # Method link with Database
     @classmethod
     def load(data):
-        return load_data(data.path)
+        all_data = load_data(data.path)
+        User.sequence = len(all_data)
+        return all_data
 
     @classmethod
     def save(data, data_user):
