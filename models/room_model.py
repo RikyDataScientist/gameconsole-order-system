@@ -3,6 +3,7 @@ from datetime import time
 class Room:
 
     times_available = [
+        time(8),
         time(9),
         time(10),
         time(11),
@@ -20,9 +21,7 @@ class Room:
         self.time_each_rooms = Room.times_available.copy()  # Copy time availability for each rooms.
         self.booked_times = []
 
-    def get_data(self, times, booked):
-        self.time_each_rooms = times
-        self.booked_times = booked
+    def get_data(self):
         return {
             "room_id": self.room_id,
             "room_name": self.name_room,

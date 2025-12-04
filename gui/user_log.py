@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import QWidget, QFrame, QVBoxLayout, QPushButton, QLineEdit, QLabel
 from PyQt6.QtCore import Qt
 from utils.info_helper import show_info, show_error
-from gui.main_menu import Main_Menu
+from gui.main_menu import MainMenu
 
 class Login(QWidget):
     def __init__(self, stack, controller):
@@ -64,7 +64,7 @@ class Login(QWidget):
             msg, data = self.controller.login(username, password)
             show_info(str(msg))
 
-            main_menu = Main_Menu(data)
+            main_menu = MainMenu(data)
             self.stack.addWidget(main_menu)
             self.stack.setCurrentIndex(2)
 

@@ -1,10 +1,31 @@
-from PyQt6.QtWidgets import QWidget, QFrame, QVBoxLayout, QPushButton, QLabel
+from PyQt6.QtWidgets import QWidget, QFrame, QVBoxLayout, QPushButton, QLabel, QStackedWidget
 from PyQt6.QtCore import Qt
+from gui.room_menu import RoomGui
+from gui.payment import PaymentGui
+from controller.pay_controller import PayController
+from utils.info_helper import show_error
+import sys
 
-class Main_Menu(QWidget):
-    def __init__(self, user_log):
+class MainMenu(QWidget):
+    def __init__(self, user):
+        super().__init__()
+        self.user = user
+        self.setFixedSize(650, 430)
+
+        layout = QVBoxLayout(self)
+        self.stack = QStackedWidget()
+
+        self.stack.addWidget(HomePage(self.user, self.stack))
+        self.stack.addWidget(RoomGui(self.user, self.stack))
+
+        layout.addWidget(self.stack)
+        self.stack.setCurrentIndex(0)
+
+class HomePage(QWidget):
+    def __init__(self, user_log, stack):
         super().__init__()
         self.user = user_log
+        self.stack = stack
         self.setFixedSize(650, 430)
         self.setStyleSheet(self.style())
 
@@ -31,9 +52,11 @@ class Main_Menu(QWidget):
 
         order_btn = QPushButton("Book")
         order_btn.setObjectName("button")
+        order_btn.clicked.connect(lambda: self.stack.setCurrentIndex(1))
 
         pay_btn = QPushButton("Pay")
         pay_btn.setObjectName("button")
+        pay_btn.clicked.connect(self.execute_payment_page)
 
         btn_layout.addWidget(subtitle)
         btn_layout.addStretch()
@@ -43,8 +66,28 @@ class Main_Menu(QWidget):
         layout.addWidget(btn_frame, alignment=Qt.AlignmentFlag.AlignCenter)
 
         exit_btn = QPushButton("Exit")
+        exit_btn.clicked.connect(sys.exit)
         exit_btn.setObjectName("button")
         layout.addWidget(exit_btn, alignment=Qt.AlignmentFlag.AlignLeft)
+
+
+    def payment_page(self):
+        pass
+        # controller = PayController(self.user)
+        # if not controller.booking:
+        #     raise ValueError("Tidak ada bookingan yang ditemukan untuk dibayar")
+
+        # payment_gui = PaymentGui(self.stack, controller)
+        # return payment_gui
+
+    def execute_room_page(self):
+        room_gui = RoomGui(self.user)
+        self.stack.setCurrentIndex(3)
+    def execute_payment_page(self):
+        try:
+            self.stack.setCurrentIndex(2)
+        except ValueError as e:
+            show_error(str(e))
 
     def style(self):
         return """
