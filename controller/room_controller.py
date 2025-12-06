@@ -28,7 +28,7 @@ class RoomManager:
         return all(t in self.model.time_each_rooms for t in selected_time)
 
     def order(self, selected_time):
-        for value in selected_time:
+        for value in list(selected_time):
             if value in self.model.time_each_rooms:
                 self.model.booked_times.append(value)
                 self.model.time_each_rooms.remove(value)

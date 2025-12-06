@@ -2,13 +2,14 @@ from PyQt6.QtWidgets import QWidget, QPushButton, QGridLayout, QComboBox, QVBoxL
 from PyQt6.QtCore import Qt
 from datetime import time
 from controller.room_controller import RoomManager
+from gui.booking import BookingDialog
 
 class RoomGui(QWidget):
 
-    def __init__(self, user, stack):
+    def __init__(self, stack, user):
         super().__init__()
-        self.user = user
         self.stack = stack
+        self.user = user
         self.setFixedSize(650, 430)
 
         main_layout = QVBoxLayout()
@@ -27,7 +28,7 @@ class RoomGui(QWidget):
 
         self.combo_box.addItem("Select Time", None)
         self.combo_box.addItem("All Time", "All")
-        for t in range(9, 18):
+        for t in range(8, 18):
             self.combo_box.addItem(f"{t}:00", time(t))
 
         self.combo_box.currentIndexChanged.connect(self.update_data)
@@ -54,7 +55,7 @@ class RoomGui(QWidget):
                 btn = QPushButton(self.rooms[idx].model.name_room)
                 btn.setFixedSize(150, 90)
                 btn.setObjectName("button")
-                # btn.clicked.connect()
+                btn.clicked.connect(lambda room=self.rooms[idx].model.name_room: self.execute(room))
                 self.button.append(btn)
                 self.card.addWidget(btn, r, c)
                 idx += 1
@@ -99,3 +100,8 @@ class RoomGui(QWidget):
                 border-radius: 13px;
                 }
                 """)
+
+    def execute(self, which_room):
+        selected_room = self.combo_box.currentData()
+        room_to_book = BookingDialog(self.user, which_room, selected_room)
+        room_to_book.exec()
