@@ -10,20 +10,38 @@ class MainMenu(QWidget):
     def __init__(self, user):
         super().__init__()
         self.user = user
+        self.data_booking = None
         self.setFixedSize(650, 430)
 
         layout = QVBoxLayout(self)
         self.stack = QStackedWidget()
 
-        self.stack.addWidget(HomePage(self.user, self.stack))
-        self.stack.addWidget(RoomGui(self.user, self.stack))
+        self.stack.addWidget(HomePage(self, self.user, self.stack))
+        self.stack.addWidget(RoomGui(self.stack, self.user))
 
         layout.addWidget(self.stack)
         self.stack.setCurrentIndex(0)
 
+    def room_page_exec(self):
+        if self.data_booking is not None:
+            show_error("Masih ada pembayaran yang belum diselesaikan")
+            return
+        self.stack.setCurrentIndex(1)
+
+    def payment_page_exec(self):
+        if self.data_booking is None:
+            show_error("Anda belum melakukan pemesanan")
+            return
+        self.stack.setCurrentIndex(2)
+
+    def calldata_to_MainGUI(self, controller=None):
+        self.data_booking = controller
+        self.stack.addWidget(PaymentGui(self.stack, PayController(controller)))
+
 class HomePage(QWidget):
-    def __init__(self, user_log, stack):
+    def __init__(self, main_menu, user_log, stack):
         super().__init__()
+        self.main_menu = main_menu
         self.user = user_log
         self.stack = stack
         self.setFixedSize(650, 430)
@@ -52,11 +70,11 @@ class HomePage(QWidget):
 
         order_btn = QPushButton("Book")
         order_btn.setObjectName("button")
-        order_btn.clicked.connect(lambda: self.stack.setCurrentIndex(1))
+        order_btn.clicked.connect(self.main_menu.room_page_exec)
 
         pay_btn = QPushButton("Pay")
         pay_btn.setObjectName("button")
-        pay_btn.clicked.connect(self.execute_payment_page)
+        pay_btn.clicked.connect(self.main_menu.payment_page_exec)
 
         btn_layout.addWidget(subtitle)
         btn_layout.addStretch()
@@ -69,25 +87,6 @@ class HomePage(QWidget):
         exit_btn.clicked.connect(sys.exit)
         exit_btn.setObjectName("button")
         layout.addWidget(exit_btn, alignment=Qt.AlignmentFlag.AlignLeft)
-
-
-    def payment_page(self):
-        pass
-        # controller = PayController(self.user)
-        # if not controller.booking:
-        #     raise ValueError("Tidak ada bookingan yang ditemukan untuk dibayar")
-
-        # payment_gui = PaymentGui(self.stack, controller)
-        # return payment_gui
-
-    def execute_room_page(self):
-        room_gui = RoomGui(self.user)
-        self.stack.setCurrentIndex(3)
-    def execute_payment_page(self):
-        try:
-            self.stack.setCurrentIndex(2)
-        except ValueError as e:
-            show_error(str(e))
 
     def style(self):
         return """
