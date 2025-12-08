@@ -16,8 +16,13 @@ class MainMenu(QWidget):
         layout = QVBoxLayout(self)
         self.stack = QStackedWidget()
 
-        self.stack.addWidget(HomePage(self, self.user, self.stack))
-        self.stack.addWidget(RoomGui(self.stack, self.user))
+        self.home_page = HomePage(self, self.user, self.stack)
+        self.room_page = RoomGui(self.stack, self.user)
+        self.payment_page = PaymentGui(self.stack, None)
+
+        self.stack.addWidget(self.home_page)
+        self.stack.addWidget(self.room_page)
+        self.stack.addWidget(self.payment_page)
 
         layout.addWidget(self.stack)
         self.stack.setCurrentIndex(0)
@@ -32,11 +37,13 @@ class MainMenu(QWidget):
         if self.data_booking is None:
             show_error("Anda belum melakukan pemesanan")
             return
-        self.stack.setCurrentIndex(2)
+        self.stack.setCurrentWidget(self.payment_page)
 
-    def calldata_to_MainGUI(self, controller=None):
-        self.data_booking = controller
-        self.stack.addWidget(PaymentGui(self.stack, PayController(controller)))
+    def calldata_to_MainGUI(self, booking_model=None):
+        self.data_booking = booking_model
+        pay_controller = PayController(booking_model)
+        
+        
 
 class HomePage(QWidget):
     def __init__(self, main_menu, user_log, stack):

@@ -36,7 +36,7 @@ class PaymentGui(QWidget):
         title_left.setObjectName("title_left")
         title_left.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.price = QLabel(f"${self.controller.price}")
+        self.price = QLabel()
         self.price.setObjectName("price")
         self.price.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
@@ -66,35 +66,35 @@ class PaymentGui(QWidget):
 
         text = QLabel("Booking Id")
         text.setObjectName("text")
-        booking_id = QLabel(str(self.controller.booking.booking_id))
-        booking_id.setObjectName("text")
+        self.booking_id = QLabel()
+        self.booking_id.setObjectName("text")
 
         layout.addWidget(text, 0, 0)
-        layout.addWidget(booking_id, 0, 1, alignment=Qt.AlignmentFlag.AlignRight)
+        layout.addWidget(self.booking_id, 0, 1, alignment=Qt.AlignmentFlag.AlignRight)
 
         text1 = QLabel("Username")
         text1.setObjectName("text")
-        username = QLabel(str(self.controller.booking.username))
-        username.setObjectName("text")
+        self.username = QLabel()
+        self.username.setObjectName("text")
 
         layout.addWidget(text1, 1, 0)
-        layout.addWidget(username, 1, 1, alignment=Qt.AlignmentFlag.AlignRight)
+        layout.addWidget(self.username, 1, 1, alignment=Qt.AlignmentFlag.AlignRight)
 
         text2 = QLabel("Console")
         text2.setObjectName("text")
-        time_booked = QLabel(str(self.controller.booking.times))
-        time_booked.setObjectName("text")
+        self.time_booked = QLabel()
+        self.time_booked.setObjectName("text")
 
         layout.addWidget(text2, 2, 0)
-        layout.addWidget(time_booked, 2, 1, alignment=Qt.AlignmentFlag.AlignRight)
+        layout.addWidget(self.time_booked, 2, 1, alignment=Qt.AlignmentFlag.AlignRight)
 
         text3 = QLabel("Console")
         text3.setObjectName("text")
-        console = QLabel(str(self.controller.booking.console))
-        console.setObjectName("text")
+        self.console = QLabel()
+        self.console.setObjectName("text")
 
         layout.addWidget(text3, 3, 0)
-        layout.addWidget(console, 3, 1, alignment=Qt.AlignmentFlag.AlignRight)
+        layout.addWidget(self.console, 3, 1, alignment=Qt.AlignmentFlag.AlignRight)
 
         self.input = QLineEdit()
         self.input.setObjectName("inputtext")
@@ -105,7 +105,7 @@ class PaymentGui(QWidget):
         button1.clicked.connect(self.Pay)
 
         right_layout.addWidget(title)
-        right_layout.addWidget(layout)
+        right_layout.addWidget(frame)
         right_layout.addWidget(self.input)
         right_layout.addWidget(button1, Qt.AlignmentFlag.AlignCenter)
         right_layout.addStretch()
@@ -113,6 +113,23 @@ class PaymentGui(QWidget):
         main_layout.addWidget(sidebar)
         main_layout.addWidget(rightbar)
 
+    def update_info(self, controller):
+        self.controller = controller
+        if controller is None:
+            self.prices.setText("Rp0")
+            self.booking_id.setText("-")
+            self.username.setText("-")
+            self.time_booked.setText("-")
+            self.console.setText("-")
+        else:
+            self.price.setText(f"Rp{controller.booking.price}")
+            self.booking_id.setText(str(controller.booking.booking_id))
+            self.username.setText(controller.booking.username)
+            self.time_booked.setText(
+                ", ".join([f"{t}:00" for t in controller.booking.times])
+            )
+            self.console.setText(controller.booking.console)
+        
     def Pay(self):
         amount = self.input.text().strip()
 
