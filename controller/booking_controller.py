@@ -27,7 +27,7 @@ class BookingController:
         data = load_data(path)
         Booking.sequence = len(data)
 
-        time_in_str = [f"{t:02d}:00" for t in time_selected]
+        time_in_str = [f"{t.hour:02d}:00" for t in time_selected]
         price = self.price(console, time_selected)
 
         data_booking = Booking(

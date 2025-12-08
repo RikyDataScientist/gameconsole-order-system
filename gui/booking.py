@@ -129,7 +129,7 @@ class BookingDialog(QDialog):
             preselected_hours = [self.selected_times]
 
         for btn in self.buttons:
-            hour = time(int(btn.text().split(":")[0])).hour
+            hour = time(int(btn.text().split(":")[0]))
             if hour in booked_times:
                 btn.setEnabled(False)
                 btn.setChecked(False)
@@ -154,7 +154,7 @@ class BookingDialog(QDialog):
     # ======================================================
     def update_price(self):
         selected_console = self.combo_console.currentText()
-        selected_times = [time(int(btn.text().split(":")[0])).hour for btn in self.buttons if btn.isChecked() and btn.isEnabled()]
+        selected_times = [time(int(btn.text().split(":")[0])) for btn in self.buttons if btn.isChecked() and btn.isEnabled()]
 
         if not selected_times:
             self.price_label.setText("Harga Total: Rp0")
@@ -168,7 +168,7 @@ class BookingDialog(QDialog):
     # ======================================================
     def simpan_booking(self):
         selected_console = self.combo_console.currentText()
-        selected_times = [time(int(btn.text().split(":")[0])).hour for btn in self.buttons if btn.isChecked() and btn.isEnabled()]
+        selected_times = [time(int(btn.text().split(":")[0])) for btn in self.buttons if btn.isChecked() and btn.isEnabled()]
 
         if not selected_times:
             show_error("Silakan pilih minimal satu waktu booking.")
