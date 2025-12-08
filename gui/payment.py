@@ -23,9 +23,10 @@ class PaymentGui(QWidget):
         self.setStyleSheet(self.style())
 
         main_layout = QHBoxLayout(self)
+        main_layout.setContentsMargins(20, 20, 20, 30)
 
         sidebar = QFrame()
-        sidebar.setStyleSheet("sidebar")
+        sidebar.setObjectName("sidebar")
         sidebar.setFixedWidth(220)
 
         sidebar_layout = QVBoxLayout(sidebar)
@@ -42,7 +43,7 @@ class PaymentGui(QWidget):
 
         cancel_button = QPushButton("Cancel Payment")
         cancel_button.setObjectName("button")
-        # button.clicked.connect(currentindex)
+        cancel_button.clicked.connect(self.cancel_payment)
 
         sidebar_layout.addStretch()
         sidebar_layout.addWidget(title_left)
@@ -52,8 +53,8 @@ class PaymentGui(QWidget):
 
         rightbar = QFrame()
         right_layout = QVBoxLayout(rightbar)
-        right_layout.setSpacing(20)
-        right_layout.setContentsMargins(40, 20, 40, 20)
+        right_layout.setSpacing(10)
+        right_layout.setContentsMargins(40, 15, 40, 15)
 
         title = QLabel("Payment")
         title.setObjectName("title")
@@ -64,7 +65,7 @@ class PaymentGui(QWidget):
         layout = QGridLayout(frame)
         layout.setVerticalSpacing(12)
 
-        text = QLabel("Booking Id")
+        text = QLabel("Booking Id:")
         text.setObjectName("text")
         self.booking_id = QLabel()
         self.booking_id.setObjectName("text")
@@ -72,7 +73,7 @@ class PaymentGui(QWidget):
         layout.addWidget(text, 0, 0)
         layout.addWidget(self.booking_id, 0, 1, alignment=Qt.AlignmentFlag.AlignRight)
 
-        text1 = QLabel("Username")
+        text1 = QLabel("Username:")
         text1.setObjectName("text")
         self.username = QLabel()
         self.username.setObjectName("text")
@@ -80,7 +81,7 @@ class PaymentGui(QWidget):
         layout.addWidget(text1, 1, 0)
         layout.addWidget(self.username, 1, 1, alignment=Qt.AlignmentFlag.AlignRight)
 
-        text2 = QLabel("Console")
+        text2 = QLabel("Total Waktu Booking:")
         text2.setObjectName("text")
         self.time_booked = QLabel()
         self.time_booked.setObjectName("text")
@@ -88,7 +89,7 @@ class PaymentGui(QWidget):
         layout.addWidget(text2, 2, 0)
         layout.addWidget(self.time_booked, 2, 1, alignment=Qt.AlignmentFlag.AlignRight)
 
-        text3 = QLabel("Console")
+        text3 = QLabel("Console:")
         text3.setObjectName("text")
         self.console = QLabel()
         self.console.setObjectName("text")
@@ -113,10 +114,14 @@ class PaymentGui(QWidget):
         main_layout.addWidget(sidebar)
         main_layout.addWidget(rightbar)
 
+    def cancel_payment(self):
+        self.stack.setCurrentIndex(0)
+        self.input.clear()
+
     def update_info(self, controller):
         self.controller = controller
         if controller is None:
-            self.prices.setText("Rp0")
+            self.price.setText("Rp0")
             self.booking_id.setText("-")
             self.username.setText("-")
             self.time_booked.setText("-")
@@ -126,10 +131,10 @@ class PaymentGui(QWidget):
             self.booking_id.setText(str(controller.booking.booking_id))
             self.username.setText(controller.booking.username)
             self.time_booked.setText(
-                ", ".join([f"{t}:00" for t in controller.booking.times])
+                f"{len(controller.booking.times)} Jam"
             )
             self.console.setText(controller.booking.console)
-        
+
     def Pay(self):
         amount = self.input.text().strip()
 
@@ -139,13 +144,15 @@ class PaymentGui(QWidget):
 
         if not amount.isdigit():
             show_error("Input hanya boleh angka")
+            return
 
         amount = int(amount)
         try:
             msg = self.controller.pay(amount)
             show_info(msg)
-            self.controller.save()
-            # self.stack.currentindex(0)
+            self.input.clear()
+            self.stack.parent().data_booking = None
+            self.stack.setCurrentIndex(0)
         except Exception as e:
             show_error(str(e))
 
@@ -157,8 +164,9 @@ class PaymentGui(QWidget):
             font-family: 'Segoe UI';
         }
         #sidebar {
-            background-color: #161b22;
-            border-right: 1px solid #1f2937;
+            background-color: #0d1117;
+            border: 1px solid #58a6ff;
+            border-radius: 16px;
         }
         #price {
             font-size: 32px;

@@ -23,20 +23,21 @@ class BookingController:
         if not time_selected:
             raise ValueError("Pilih Waktu Bermain")
 
-        time_in_strings = [a.strftime("%H:%M") for a in time_selected]
+        path = "database/booking.json"
+        data = load_data(path)
+        Booking.sequence = len(data)
 
+        time_in_str = [f"{t:02d}:00" for t in time_selected]
         price = self.price(console, time_selected)
 
         data_booking = Booking(
             username=self.user.username,
-            room_id=self.room.room_id,
-            times=time_in_strings,
+            room_id=self.room.model.room_id,
+            times=time_in_str,
             console=console,
             price=price
         )
 
-        path = "/database/booking.json"
-        data = load_data(path)
         data.append(data_booking.get_dict())
         save_data(path, data)
 

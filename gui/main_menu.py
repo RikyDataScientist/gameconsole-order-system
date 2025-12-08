@@ -42,8 +42,9 @@ class MainMenu(QWidget):
     def calldata_to_MainGUI(self, booking_model=None):
         self.data_booking = booking_model
         pay_controller = PayController(booking_model)
-        
-        
+        self.payment_page.update_info(pay_controller)
+        self.stack.setCurrentIndex(0)
+
 
 class HomePage(QWidget):
     def __init__(self, main_menu, user_log, stack):

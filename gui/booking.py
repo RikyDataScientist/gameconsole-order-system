@@ -11,10 +11,11 @@ from utils.info_helper import show_info, show_error
 
 
 class BookingDialog(QDialog):
-    def __init__(self, user, room, selected_times):
+    def __init__(self, callback, user, room, selected_times):
         super().__init__()
-        self.selected_times = selected_times
+        self.callback = callback
         self.book = BookingController(user=user, room=room)  # Sesuaikan dengan user dan room yang sebenarnya
+        self.selected_times = selected_times
         self.setWindowTitle("Sistem Booking Console")
 
         # ======================================================
@@ -33,7 +34,7 @@ class BookingDialog(QDialog):
         layout.setContentsMargins(40, 40, 40, 40)
 
         # Judul Form
-        title_label = QLabel("Booking {self.book.room.room_name}")
+        title_label = QLabel(f"Booking {self.book.room.model.name_room}")
         layout.addWidget(title_label, alignment=Qt.AlignmentFlag.AlignCenter)
         title_label.setFont(QFont("Arial", 20, QFont.Weight.Bold))
 
@@ -52,7 +53,26 @@ class BookingDialog(QDialog):
                 self.btn = QPushButton(waktu)
                 self.btn.setObjectName("button")
                 self.btn.setCheckable(True)
+                self.btn.setStyleSheet("""
+            #button {
+                background: #0d1117;
+                border-radius: 13px;
+                border: 2px solid #58a6ff
+                }
+            #button:hover {
+                background-color: #2b7bff;
+                border-color: #58a6ff;
+                }
+            #button:pressed {
+                background-color: #165bb7;
+                border-color: #3a8bff;
+                }
+            #button:checked {
+                background-color: #1158d6;
+                }
+                """)
                 self.btn.setFixedSize(100, 40)
+                self.btn.clicked.connect(self.click_to_update)
                 self.buttons.append(self.btn)
                 h1.addWidget(self.btn, row, col)
         layout.addWidget(frame)
@@ -67,6 +87,7 @@ class BookingDialog(QDialog):
         self.combo_console.setObjectName("box")
         self.combo_console.addItems(["PS5", "PS4", "Xbox Series X", "Nintendo Switch"])
         self.combo_console.setMinimumWidth(300)
+        self.combo_console.currentIndexChanged.connect(self.update_price)
         h2.addWidget(self.combo_console)
         layout.addLayout(h2)
 
@@ -89,29 +110,51 @@ class BookingDialog(QDialog):
 
         self.setLayout(layout)
         self.update_buttons()
-        self.combo_console.currentIndexChanged.connect(self.update)
-        self.findChildren(QPushButton, "button")[0].clicked.connect(self.update)
+        self.update_price()
+
+    # ======================================================
+    # Update Data Saat Button Waktu Diklik dan Combo Box Console Berubah
+    # ======================================================
+    def click_to_update(self):
+        self.update_price()
 
     # ======================================================
     # Update Tombol Berdasarkan Waktu yang room sudah dipesan
     # ======================================================
     def update_buttons(self):
+        booked_times = self.book.room.model.booked_times
         if self.selected_times is None or self.selected_times == "All":
-            return
+            preselected_hours = []
+        else:
+            preselected_hours = [self.selected_times]
 
         for btn in self.buttons:
-            hour = int(btn.text().split(":")[0])
-            if hour in self.selected_times:
-                btn.setchecked(True)
-                break
+            hour = time(int(btn.text().split(":")[0])).hour
+            if hour in booked_times:
+                btn.setEnabled(False)
+                btn.setChecked(False)
+                btn.setStyleSheet("""
+            #button {
+                background-color: #30363d;
+                color: #8b949e;
+                border: 1px solid #21262d;
+                border-radius: 13px;
+                }
+                """)
+                btn.setToolTip("Sudah dipesan")
+            else:
+                btn.setEnabled(True)
+                if hour in preselected_hours:
+                    btn.setChecked(True)
+                else:
+                    btn.setChecked(False)
 
     # ======================================================
     # Update Harga Total Saat Pilihan Berubah
     # ======================================================
-    def update(self):
+    def update_price(self):
         selected_console = self.combo_console.currentText()
-        selected_button = self.findChildren(QPushButton, "button")
-        selected_times = [time(int(btn.text().split(":")[0])).hour for btn in selected_button if btn.isChecked()]
+        selected_times = [time(int(btn.text().split(":")[0])).hour for btn in self.buttons if btn.isChecked() and btn.isEnabled()]
 
         if not selected_times:
             self.price_label.setText("Harga Total: Rp0")
@@ -125,8 +168,7 @@ class BookingDialog(QDialog):
     # ======================================================
     def simpan_booking(self):
         selected_console = self.combo_console.currentText()
-        selected_button = self.findChildren(QPushButton, "button")
-        selected_times = [time(int(btn.text().split(":")[0])).hour for btn in selected_button if btn.isChecked()]
+        selected_times = [time(int(btn.text().split(":")[0])).hour for btn in self.buttons if btn.isChecked() and btn.isEnabled()]
 
         if not selected_times:
             show_error("Silakan pilih minimal satu waktu booking.")
@@ -136,5 +178,9 @@ class BookingDialog(QDialog):
             booking = self.book.create_booking(selected_console, selected_times)
             self.book.room.order(selected_times)
             show_info(f"Booking berhasil!\nID Booking: {booking.booking_id}\nTotal Harga: Rp{booking.price}")
+            self.callback.calldata_to_MainGUI(booking)
+            self.accept()
         except ValueError as e:
             show_error(str(e))
+        except Exception as e:
+            show_error(f"Terjadi kesalahan: {str(e)}")
