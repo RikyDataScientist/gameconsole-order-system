@@ -15,8 +15,11 @@ class PayController:
         if amount < self.price:
             raise ValueError("Jumlah Bayar kurang dari Harga Bayar")
 
-        cashback = self.price - amount
+        cashback = amount - self.price
         self.booking.status = "paid"
+
+        data = load_data(PayController.path)
+        Payment.sequence = len(data)
 
         self.payment = Payment(
             booking_id=self.booking.booking_id,
@@ -27,9 +30,8 @@ class PayController:
             price=self.price,
             status=self.booking.status
         )
-        return f"Transaksi Berhasil\n{cashback} adalah kembalian anda"
 
-    def save(self):
-        data = load_data(PayController.path)
         data.append(self.payment.get_dict())
         save_data(PayController.path, data)
+
+        return f"Transaksi Berhasil\n{cashback} adalah kembalian anda"
