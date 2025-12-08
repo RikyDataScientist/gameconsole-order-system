@@ -55,7 +55,7 @@ class RoomGui(QWidget):
                 btn = QPushButton(self.rooms[idx].model.name_room)
                 btn.setFixedSize(150, 90)
                 btn.setObjectName("button")
-                btn.clicked.connect(lambda room=self.rooms[idx].model.name_room: self.execute(room))
+                btn.clicked.connect(lambda checked=False, room=self.rooms[idx]: self.execute(room))
                 self.button.append(btn)
                 self.card.addWidget(btn, r, c)
                 idx += 1
@@ -103,5 +103,5 @@ class RoomGui(QWidget):
 
     def execute(self, which_room):
         selected_room = self.combo_box.currentData()
-        room_to_book = BookingDialog(self.user, which_room, selected_room)
+        room_to_book = BookingDialog(callback=self.stack.parent(), user=self.user, room=which_room, selected_times=selected_room)
         room_to_book.exec()
