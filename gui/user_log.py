@@ -11,7 +11,7 @@ class Login(QWidget):
         self.setFixedSize(420, 520)
         self.setStyleSheet(apply_style())
 
-        title = QLabel('Login in to HimBank')
+        title = QLabel('Login Account')
         title.setAlignment(Qt.AlignmentFlag.AlignCenter)
         title.setObjectName('title')
 
