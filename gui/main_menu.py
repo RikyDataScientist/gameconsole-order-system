@@ -37,7 +37,7 @@ class MainMenu(QWidget):
         if self.data_booking is None:
             show_error("Anda belum melakukan pemesanan")
             return
-        self.stack.setCurrentWidget(self.payment_page)
+        self.stack.setCurrentIndex(2)
 
     def calldata_to_MainGUI(self, booking_model=None):
         self.data_booking = booking_model

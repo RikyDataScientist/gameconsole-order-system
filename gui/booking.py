@@ -18,29 +18,19 @@ class BookingDialog(QDialog):
         self.selected_times = selected_times
         self.setWindowTitle("Sistem Booking Console")
 
-        # ======================================================
-        # ➜ PERBESAR UKURAN QDIALOG
-        # ======================================================
         self.resize(650, 430)
 
-        # ======================================================
-        # ➜ SETTING FONT BESAR UNTUK SEMUA ELEMEN
-        # ======================================================
         font_besar = QFont("Arial", 14)
         self.setFont(font_besar)
 
         layout = QVBoxLayout()
-        layout.setSpacing(20)     # Jarak antar elemen lebih lega
+        layout.setSpacing(20)
         layout.setContentsMargins(40, 40, 40, 40)
 
-        # Judul Form
         title_label = QLabel(f"Booking {self.book.room.model.name_room}")
         layout.addWidget(title_label, alignment=Qt.AlignmentFlag.AlignCenter)
         title_label.setFont(QFont("Arial", 20, QFont.Weight.Bold))
 
-        # -----------------------------
-        # PILIH WAKTU
-        # -----------------------------
         frame = QFrame()
 
         h1 = QGridLayout(frame)
@@ -77,9 +67,6 @@ class BookingDialog(QDialog):
                 h1.addWidget(self.btn, row, col)
         layout.addWidget(frame)
 
-        # -----------------------------
-        # PILIH CONSOLE
-        # -----------------------------
         h2 = QHBoxLayout()
         h2.addWidget(QLabel("Pilih Console:"))
 
@@ -91,17 +78,11 @@ class BookingDialog(QDialog):
         h2.addWidget(self.combo_console)
         layout.addLayout(h2)
 
-        # -----------------------------
-        # Harga Total
-        # -----------------------------
         h3 = QVBoxLayout()
         self.price_label = QLabel("Harga Total: Rp0")
         h3.addWidget(self.price_label, alignment=Qt.AlignmentFlag.AlignRight)
         layout.addLayout(h3)
 
-        # -----------------------------
-        # TOMBOL SIMPAN
-        # -----------------------------
         self.btn_simpan = QPushButton("Simpan Booking")
         self.btn_simpan.setMinimumHeight(50)
         self.btn_simpan.setStyleSheet("font-size: 18px;")
@@ -112,15 +93,9 @@ class BookingDialog(QDialog):
         self.update_buttons()
         self.update_price()
 
-    # ======================================================
-    # Update Data Saat Button Waktu Diklik dan Combo Box Console Berubah
-    # ======================================================
     def click_to_update(self):
         self.update_price()
 
-    # ======================================================
-    # Update Tombol Berdasarkan Waktu yang room sudah dipesan
-    # ======================================================
     def update_buttons(self):
         booked_times = self.book.room.model.booked_times
         if self.selected_times is None or self.selected_times == "All":
@@ -149,9 +124,6 @@ class BookingDialog(QDialog):
                 else:
                     btn.setChecked(False)
 
-    # ======================================================
-    # Update Harga Total Saat Pilihan Berubah
-    # ======================================================
     def update_price(self):
         selected_console = self.combo_console.currentText()
         selected_times = [time(int(btn.text().split(":")[0])) for btn in self.buttons if btn.isChecked() and btn.isEnabled()]
@@ -163,9 +135,6 @@ class BookingDialog(QDialog):
         total_price = self.book.price(selected_console, selected_times)
         self.price_label.setText(f"Harga Total: Rp{total_price}")
 
-    # ======================================================
-    # Tombol Simpan Booking
-    # ======================================================
     def simpan_booking(self):
         selected_console = self.combo_console.currentText()
         selected_times = [time(int(btn.text().split(":")[0])) for btn in self.buttons if btn.isChecked() and btn.isEnabled()]

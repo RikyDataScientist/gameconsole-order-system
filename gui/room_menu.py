@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QWidget, QPushButton, QGridLayout, QComboBox, QVBoxLayout, QLabel
+from PyQt6.QtWidgets import QWidget, QPushButton, QGridLayout, QComboBox, QVBoxLayout, QLabel, QFrame
 from PyQt6.QtCore import Qt
 from datetime import time
 from controller.room_controller import RoomManager
@@ -11,36 +11,42 @@ class RoomGui(QWidget):
         self.stack = stack
         self.user = user
         self.setFixedSize(650, 430)
+        self.setStyleSheet(style())
 
+        # Main Layout
         main_layout = QVBoxLayout()
-        main_layout.setContentsMargins(30, 20, 30, 20)
-        main_layout.setSpacing(18)
+        main_layout.setContentsMargins(20, 20, 20, 20)
+        main_layout.setSpacing(0)
         self.setLayout(main_layout)
 
+        # Frame
+        frame = QFrame()
+        frame.setObjectName("card")
+        main_layout.addWidget(frame, alignment=Qt.AlignmentFlag.AlignCenter)
+
+        # Layout For Frame
+        self.grid = QGridLayout(frame)
+        self.grid.setContentsMargins(20, 10, 20, 10)
+        self.grid.setSpacing(25)
+
+        # Title
         title = QLabel("Order Room")
         title.setObjectName("title")
-        main_layout.addWidget(title, alignment=Qt.AlignmentFlag.AlignCenter)
+        self.grid.addWidget(title, 0, 0, 1, 2, alignment=Qt.AlignmentFlag.AlignCenter)
 
         # Time Select
         self.combo_box = QComboBox()
-        self.combo_box.setFixedWidth(200)
-        self.combo_box.setObjectName("box")
+        self.combo_box.setObjectName("selectbox")
 
         self.combo_box.addItem("Select Time", None)
         self.combo_box.addItem("All Time", "All")
         for t in range(8, 18):
             self.combo_box.addItem(f"{t}:00", time(t))
+        self.grid.addWidget(self.combo_box, 1, 0, 1, 2)
 
         self.combo_box.currentIndexChanged.connect(self.update_data)
-        main_layout.addWidget(self.combo_box, alignment=Qt.AlignmentFlag.AlignCenter)
 
         # Tombol Room
-        self.card = QGridLayout()
-        self.card.setSpacing(15)
-        self.card.setObjectName("card")
-        main_layout.addLayout(self.card)
-        main_layout.addStretch()
-
         self.rooms = [
             RoomManager(1, "Room A"),
             RoomManager(2, "Room B"),
@@ -50,15 +56,34 @@ class RoomGui(QWidget):
 
         self.button = []
         idx = 0
-        for r in range(2):
+        for r in range(2, 4):
             for c in range(2):
                 btn = QPushButton(self.rooms[idx].model.name_room)
                 btn.setFixedSize(150, 90)
                 btn.setObjectName("button")
                 btn.clicked.connect(lambda checked=False, room=self.rooms[idx]: self.execute(room))
                 self.button.append(btn)
-                self.card.addWidget(btn, r, c)
+                self.grid.addWidget(btn, r, c)
                 idx += 1
+
+        cancel_button = QPushButton("Back")
+        cancel_button.setFixedSize(100, 35)
+        cancel_button.setObjectName("nav_button")
+        cancel_button.setStyleSheet("""
+            QPushButton {
+                background-color: #238636;
+                color: white;
+                border-radius: 10px;
+                font-size: 16px;
+            }
+            QPushButton:hover {
+                background-color: #2ea043;
+            }
+            QPushButton:pressed {
+                background-color: #196c2e;
+            }""")
+        cancel_button.clicked.connect(lambda: self.stack.setCurrentIndex(0))
+        self.grid.addWidget(cancel_button, 4, 0, alignment=Qt.AlignmentFlag.AlignLeft)
 
         self.update_data()
 
@@ -78,8 +103,9 @@ class RoomGui(QWidget):
                 button.setStyleSheet("""
             #button {
                 background: #0d1117;
+                font-size: 16px;
                 border-radius: 13px;
-                border: 2px solid #58a6ff
+                border: 2px solid #58a6ff;
                 }
             #button:hover {
                 background-color: #2b7bff;
@@ -96,12 +122,49 @@ class RoomGui(QWidget):
             #button {
                 background-color: #30363d;
                 color: #8b949e;
+                font-size: 16px;
                 border: 1px solid #21262d;
                 border-radius: 13px;
                 }
                 """)
 
     def execute(self, which_room):
-        selected_room = self.combo_box.currentData()
-        room_to_book = BookingDialog(callback=self.stack.parent(), user=self.user, room=which_room, selected_times=selected_room)
+        selected_time = self.combo_box.currentData()
+        room_to_book = BookingDialog(callback=self.stack.parent(), user=self.user, room=which_room, selected_times=selected_time)
         room_to_book.exec()
+
+def style():
+    return """
+    #title {
+        font-size: 26px;
+        font-weight: bold;
+        color: #58a6ff;
+        background: transparent;
+    }
+
+    /* ===== COMBO BOX (SELECT TIME) ===== */
+    #selectbox {
+        background-color: #0d1117;
+        border: 2px solid #30363d;
+        padding: 10px;
+        border-radius: 10px;
+        font-size: 15px;
+        color: #c9d1d9;
+    }
+
+    #selectbox:hover {
+        border: 2px solid #58a6ff;
+    }
+
+    #selectbox::drop-down {
+        border: none;
+        width: 30px;
+    }
+
+    #selectbox QAbstractItemView {
+        background-color: #161b22;
+        color: #c9d1d9;
+        selection-background-color: #238636;
+        border-radius: 8px;
+    }
+    """
