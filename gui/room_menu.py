@@ -43,6 +43,7 @@ class RoomGui(QWidget):
         for t in range(8, 18):
             self.combo_box.addItem(f"{t}:00", time(t))
         self.grid.addWidget(self.combo_box, 1, 0, 1, 2)
+        self.combo_box.setCurrentIndex(self.combo_box.findData("Select Time"))
 
         self.combo_box.currentIndexChanged.connect(self.update_data)
 
@@ -82,10 +83,11 @@ class RoomGui(QWidget):
             QPushButton:pressed {
                 background-color: #196c2e;
             }""")
-        cancel_button.clicked.connect(lambda: self.stack.setCurrentIndex(0))
+        cancel_button.clicked.connect(self.exit_run)
         self.grid.addWidget(cancel_button, 4, 0, alignment=Qt.AlignmentFlag.AlignLeft)
 
         self.update_data()
+        self.update_button()
 
     def update_data(self):
         selected_time = self.combo_box.currentData()
@@ -128,9 +130,19 @@ class RoomGui(QWidget):
                 }
                 """)
 
+    def update_button(self):
+        self.combo_box.setCurrentIndex(self.combo_box.findData(None))
+
+    def exit_run(self):
+        self.stack.setCurrentIndex(0)
+        self.update_data()
+        self.update_button()
+
     def execute(self, which_room):
         selected_time = self.combo_box.currentData()
         room_to_book = BookingDialog(callback=self.stack.parent(), user=self.user, room=which_room, selected_times=selected_time)
+        self.update_data()
+        self.update_button()
         room_to_book.exec()
 
 def style():
@@ -142,7 +154,6 @@ def style():
         background: transparent;
     }
 
-    /* ===== COMBO BOX (SELECT TIME) ===== */
     #selectbox {
         background-color: #0d1117;
         border: 2px solid #30363d;
