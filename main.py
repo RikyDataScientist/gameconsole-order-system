@@ -1,9 +1,11 @@
 from PyQt6.QtWidgets import QApplication, QStackedWidget
+from PyQt6.QtGui import QIcon
 from gui.user_log import Login, Register
 from controller.user_controller import UserController
 
 if __name__ == "__main__":
     app = QApplication([])
+    app
 
     app.setStyleSheet("""
         QWidget {
@@ -24,5 +26,7 @@ if __name__ == "__main__":
 
     stack.setCurrentIndex(0)
 
+    stack.setWindowTitle("Game Console Order")
+    stack.setWindowIcon(QIcon("asset/logo.png"))
     stack.show()
     app.exec()

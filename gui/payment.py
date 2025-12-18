@@ -25,13 +25,13 @@ class PaymentGui(QWidget):
         main_layout = QHBoxLayout(self)
         main_layout.setContentsMargins(20, 20, 20, 30)
 
-        sidebar = QFrame()
-        sidebar.setObjectName("sidebar")
-        sidebar.setFixedWidth(220)
+        left_bar = QFrame()
+        left_bar.setObjectName("sidebar")
+        left_bar.setFixedWidth(220)
 
-        sidebar_layout = QVBoxLayout(sidebar)
-        sidebar_layout.setContentsMargins(30, 40, 30, 40)
-        sidebar_layout.setSpacing(5)
+        left_layout = QVBoxLayout(left_bar)
+        left_layout.setContentsMargins(30, 40, 30, 40)
+        left_layout.setSpacing(5)
 
         title_left = QLabel("To Pay")
         title_left.setObjectName("title_left")
@@ -45,14 +45,14 @@ class PaymentGui(QWidget):
         cancel_button.setObjectName("button")
         cancel_button.clicked.connect(self.cancel_payment)
 
-        sidebar_layout.addStretch()
-        sidebar_layout.addWidget(title_left)
-        sidebar_layout.addWidget(self.price)
-        sidebar_layout.addStretch()
-        sidebar_layout.addWidget(cancel_button)
+        left_layout.addStretch()
+        left_layout.addWidget(title_left)
+        left_layout.addWidget(self.price)
+        left_layout.addStretch()
+        left_layout.addWidget(cancel_button)
 
-        rightbar = QFrame()
-        right_layout = QVBoxLayout(rightbar)
+        right_bar = QFrame()
+        right_layout = QVBoxLayout(right_bar)
         right_layout.setSpacing(10)
         right_layout.setContentsMargins(40, 15, 40, 15)
 
@@ -69,7 +69,6 @@ class PaymentGui(QWidget):
         text.setObjectName("text")
         self.booking_id = QLabel()
         self.booking_id.setObjectName("text")
-
         layout.addWidget(text, 0, 0)
         layout.addWidget(self.booking_id, 0, 1, alignment=Qt.AlignmentFlag.AlignRight)
 
@@ -77,7 +76,6 @@ class PaymentGui(QWidget):
         text1.setObjectName("text")
         self.username = QLabel()
         self.username.setObjectName("text")
-
         layout.addWidget(text1, 1, 0)
         layout.addWidget(self.username, 1, 1, alignment=Qt.AlignmentFlag.AlignRight)
 
@@ -85,7 +83,6 @@ class PaymentGui(QWidget):
         text2.setObjectName("text")
         self.time_booked = QLabel()
         self.time_booked.setObjectName("text")
-
         layout.addWidget(text2, 2, 0)
         layout.addWidget(self.time_booked, 2, 1, alignment=Qt.AlignmentFlag.AlignRight)
 
@@ -93,7 +90,6 @@ class PaymentGui(QWidget):
         text3.setObjectName("text")
         self.console = QLabel()
         self.console.setObjectName("text")
-
         layout.addWidget(text3, 3, 0)
         layout.addWidget(self.console, 3, 1, alignment=Qt.AlignmentFlag.AlignRight)
 
@@ -111,8 +107,8 @@ class PaymentGui(QWidget):
         right_layout.addWidget(button1, Qt.AlignmentFlag.AlignCenter)
         right_layout.addStretch()
 
-        main_layout.addWidget(sidebar)
-        main_layout.addWidget(rightbar)
+        main_layout.addWidget(left_bar)
+        main_layout.addWidget(right_bar)
 
     def cancel_payment(self):
         self.stack.setCurrentIndex(0)
