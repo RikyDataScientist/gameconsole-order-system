@@ -5,7 +5,6 @@ from controller.user_controller import UserController
 
 if __name__ == "__main__":
     app = QApplication([])
-    app
 
     app.setStyleSheet("""
         QWidget {

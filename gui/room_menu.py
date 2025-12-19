@@ -13,28 +13,23 @@ class RoomGui(QWidget):
         self.setFixedSize(650, 430)
         self.setStyleSheet(style())
 
-        # Main Layout
         main_layout = QVBoxLayout()
         main_layout.setContentsMargins(20, 20, 20, 20)
         main_layout.setSpacing(0)
         self.setLayout(main_layout)
 
-        # Frame
         frame = QFrame()
         frame.setObjectName("card")
         main_layout.addWidget(frame, alignment=Qt.AlignmentFlag.AlignCenter)
 
-        # Layout For Frame
         self.grid = QGridLayout(frame)
         self.grid.setContentsMargins(20, 10, 20, 10)
         self.grid.setSpacing(25)
 
-        # Title
         title = QLabel("Order Room")
         title.setObjectName("title")
         self.grid.addWidget(title, 0, 0, 1, 2, alignment=Qt.AlignmentFlag.AlignCenter)
 
-        # Time Select
         self.combo_box = QComboBox()
         self.combo_box.setObjectName("selectbox")
 
@@ -47,7 +42,6 @@ class RoomGui(QWidget):
 
         self.combo_box.currentIndexChanged.connect(self.update_data)
 
-        # Tombol Room
         self.rooms = [
             RoomManager(1, "Room A"),
             RoomManager(2, "Room B"),

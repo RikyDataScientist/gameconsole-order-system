@@ -1,1 +1,15 @@
-[]
+[
+    {
+        "booking_id": "1",
+        "username": "amelia12",
+        "room_id": 1,
+        "times": [
+            "14:00",
+            "15:00",
+            "16:00"
+        ],
+        "console": "PS5",
+        "price": 45000,
+        "status": "pending"
+    }
+]
