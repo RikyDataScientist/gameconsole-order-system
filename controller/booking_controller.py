@@ -1,5 +1,6 @@
 from models.booking import Booking
 from utils.json_helpers import load_data, save_data
+from utils.pdf_helper import save_booking_to_pdf
 
 class BookingController:
     console = {
@@ -40,5 +41,7 @@ class BookingController:
 
         data.append(data_booking.get_dict())
         save_data(path, data)
+
+        save_booking_to_pdf(data_booking)
 
         return data_booking

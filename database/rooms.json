@@ -3,7 +3,11 @@
         "room_id": 1,
         "name": "Room A",
         "status": "available",
-        "booked_times": []
+        "booked_times": [
+            "14:00",
+            "15:00",
+            "16:00"
+        ]
     },
     {
         "room_id": 2,
